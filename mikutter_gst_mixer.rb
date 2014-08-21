@@ -3,12 +3,16 @@
 Plugin.create(:mikutter_gst_mixer) do
     @@channels = {}
 
+    def get_sym(channel)
+        "gst_mixer_#{channel.to_s}".to_sym
+    end
+
     on_gst_play do |filename, channel = :default|
-        @@channels[channel] = 70
+        @@channels[channel] = UserConfig[get_sym(channel)] || 70
     end
 
     on_gst_enq do |filename, channel = :default|
-        @@channels[channel] = 70
+        @@channels[channel] = UserConfig[get_sym(channel)] || 70
     end
 
     on_gst_set_volume do |volume, channel = :default|
@@ -19,7 +23,7 @@ Plugin.create(:mikutter_gst_mixer) do
         # タブ作成前に、他プラグインの明示的なチャンネルの宣言を拾っておく
         Plugin.filtering(:gst_mixer, [])[0].each do |v|
             if !@@channels.has_key?(v)
-                @@channels[v] = 70
+                @@channels[v] = UserConfig[get_sym(v)] || 70
             end
         end
         tab(:mikutter_gst_mixer, "音量ミキサ") do
@@ -36,6 +40,7 @@ Plugin.create(:mikutter_gst_mixer) do
                 scale.signal_connect("value-changed") do
                     volume = (scale.value*100).to_i
                     Plugin.call(:gst_set_volume, volume, k)
+                    UserConfig["gst_mixer_#{k.to_s}".to_sym] = volume
                 end
                 hbox.pack_start(scale)
                 vbox.pack_start(hbox, false, false)
@@ -57,6 +62,7 @@ Plugin.create(:mikutter_gst_mixer) do
     end
 
     Delayer.new do
-        create_tab if Plugin::GUI::Tab.exist?(:mikutter_gst_mixer)        
+        
+        create_tab if Plugin::GUI::Tab.exist?(:mikutter_gst_mixer)
     end
 end
