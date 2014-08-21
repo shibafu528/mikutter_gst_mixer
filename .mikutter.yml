@@ -1,0 +1,12 @@
+---
+slug: :mikutter_gst_mixer
+depends:
+  mikutter: 3.0.4
+  plugin:
+    - mikutter_gstreamer
+    - gui
+    - gtk
+version: '1.0'
+author: shibafu528
+name: mikutter_gst_mixer
+description: mikutter_gsreamerの音量調整プラグイン
