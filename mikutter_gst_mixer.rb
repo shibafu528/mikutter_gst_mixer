@@ -27,7 +27,7 @@ Plugin.create(:mikutter_gst_mixer) do
             end
         end
         tab(:mikutter_gst_mixer, "音量ミキサ") do
-            # set_icon File.expand_path(File.join(File.dirname(__FILE__), "mixer.png")).freeze
+            set_icon File.expand_path(File.join(File.dirname(__FILE__), "audio-volume-high.png")).freeze
             set_deletable true
             vbox = Gtk::VBox.new
             @@channels.each do |k, v|
