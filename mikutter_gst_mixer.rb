@@ -29,9 +29,9 @@ Plugin.create(:mikutter_gst_mixer) do
         tab(:mikutter_gst_mixer, "音量ミキサ") do
             set_icon File.expand_path(File.join(File.dirname(__FILE__), "audio-volume-high.png")).freeze
             set_deletable true
-            vbox = Gtk::VBox.new
+            vbox = Gtk::VBox.new(false, 6)
             @@channels.each do |k, v|
-                hbox = Gtk::HBox.new
+                hbox = Gtk::HBox.new(true, 10)
                 label = Gtk::Label.new(k.to_s, false)
                 hbox.pack_start(label, false, false)
                 scale = Gtk::HScale.new(0.0, 1.0, 0.01)
@@ -42,7 +42,7 @@ Plugin.create(:mikutter_gst_mixer) do
                     Plugin.call(:gst_set_volume, volume, k)
                     UserConfig["gst_mixer_#{k.to_s}".to_sym] = volume
                 end
-                hbox.pack_start(scale)
+                hbox.pack_start(scale, true, true, 10)
                 vbox.pack_start(hbox, false, false)
             end
             nativewidget vbox
